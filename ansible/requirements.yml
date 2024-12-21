@@ -1,0 +1,4 @@
+---
+collections:
+  - name: community.general
+  - name: git+https://github.com/fjfinch/ansible-namespace.git
