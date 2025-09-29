@@ -1,0 +1,28 @@
+---
+- name: 'RESTORE : decrypt backup'
+  ansible.builtin.shell:
+    cmd: gpg --batch --passphrase '{{ DB_BACKUP }}' -o test.tar -d test.gpg
+    chdir: files/backup/
+
+- name: 'RESTORE : remove current & add emtpy database'
+  community.postgresql.postgresql_db:
+    state: '{{ item.state }}'
+    login_host: localhost
+    login_user: test_user
+    name: test_db
+  loop:
+    - { state: absent }
+    - { state: present }
+
+- name: 'RESTORE : restore database'
+  community.postgresql.postgresql_db:
+    state: restore
+    login_host: localhost
+    login_user: test_user
+    name: test_db
+    target: files/backup/test.tar
+
+- name: 'RESTORE : remove intermediate file'
+  ansible.builtin.file:
+    path: files/backup/test.tar
+    state: absent

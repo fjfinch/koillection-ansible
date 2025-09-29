@@ -1,0 +1,18 @@
+---
+- name: 'DUMP : dump database'
+  community.postgresql.postgresql_db:
+    state: dump
+    login_host: localhost
+    login_user: test_user
+    name: test_db
+    target: files/backup/test.tar
+
+- name: 'DUMP : encrypt backup'
+  ansible.builtin.shell:
+    cmd: rm -f test.gpg && gpg --batch --passphrase '{{ DB_BACKUP }}' -o test.gpg -c test.tar
+    chdir: files/backup/
+
+- name: 'DUMP : remove intermediate file'
+  ansible.builtin.file:
+    path: files/backup/test.tar
+    state: absent
