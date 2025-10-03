@@ -32,7 +32,7 @@ ansible-galaxy collection install -r requirements.yml
 ```
 
 4 - Execute the playbook:
-> Note: first create the `files/secret.yml` file and add the database password
+> Note: create the `files/secret.yml` file first and add the database password
 ```bash
 ansible-playbook main.yml -K
 ```

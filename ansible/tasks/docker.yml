@@ -1,9 +1,9 @@
 ---
-#- name: 'DOCKER : copy docker env file'
-#  ansible.builtin.template:
-#    src: templates/.env.j2
-#    dest: files/.env
-#    mode: '0644'
+- name: 'DOCKER : copy docker env file'
+  ansible.builtin.template:
+    src: templates/.env.j2
+    dest: files/.env
+    mode: '0644'
 
 - name: 'DOCKER : create volume'
   community.docker.docker_volume:
@@ -25,6 +25,7 @@
     images: true
   become: true
 
-- name: 'DOCKER : wait for containers to start'
-  ansible.builtin.wait_for:
-    timeout: 2
+- name: 'DOCKER : wait for everything to start'
+  wait_for:
+    host: 127.0.0.1
+    port: 80

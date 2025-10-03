@@ -18,5 +18,5 @@
   tasks:
     - include_vars: files/secret.yml
     - import_tasks: tasks/docker.yml
-#    - import_tasks: tasks/dump.yml
+    - import_tasks: tasks/dump.yml
 #    - import_tasks: tasks/restore.yml

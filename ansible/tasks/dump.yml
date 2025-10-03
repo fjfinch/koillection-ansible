@@ -5,14 +5,37 @@
     login_host: localhost
     login_user: test_user
     name: test_db
-    target: files/backup/test.tar
+    target: /tmp/db.tar
 
-- name: 'DUMP : encrypt backup'
+- name: 'DUMP : dump images'
+  community.general.archive:
+    path: /var/lib/docker/volumes/volume_koillection/_data/
+    dest: /tmp/images.tar
+  become: true
+
+- name: 'DUMP : encrypt dumps'
   ansible.builtin.shell:
-    cmd: rm -f test.gpg && gpg --batch --passphrase '{{ DB_BACKUP }}' -o test.gpg -c test.tar
+    cmd: '{{ item }}'
     chdir: files/backup/
+  loop:
+    - rm -f db.gpg && gpg --batch --passphrase '{{DB_BACKUP}}' -o db.gpg -c /tmp/db.tar
+    - rm -f images.gpg && gpg --batch --passphrase '{{ DB_BACKUP }}' -o images.gpg -c /tmp/images.tar
 
-- name: 'DUMP : remove intermediate file'
+- name: 'DUMP : remove intermediate files'
   ansible.builtin.file:
-    path: files/backup/test.tar
+    path: '{{ item }}'
     state: absent
+  loop:
+    - /tmp/db.tar
+    - /tmp/images.tar
+  become: true
+
+
+#localhost
+#test_user
+#test_db
+#/var/lib/docker/volumes/volume_koillection/_data/
+#/tmp/db.tar
+#/tmp/images.tar
+#db.gpg
+#images.gpg

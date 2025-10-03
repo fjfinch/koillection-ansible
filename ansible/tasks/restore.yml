@@ -1,8 +1,11 @@
 ---
-- name: 'RESTORE : decrypt backup'
+- name: 'RESTORE : decrypt dumps'
   ansible.builtin.shell:
-    cmd: gpg --batch --passphrase '{{ DB_BACKUP }}' -o test.tar -d test.gpg
+    cmd: '{{ item }}'
     chdir: files/backup/
+  loop:
+    - gpg --batch --passphrase '{{ DB_BACKUP }}' -o /tmp/db.tar -d db.gpg
+    - gpg --batch --passphrase '{{ DB_BACKUP }}' -o /tmp/images.tar -d images.gpg
 
 - name: 'RESTORE : remove current & add emtpy database'
   community.postgresql.postgresql_db:
@@ -20,9 +23,18 @@
     login_host: localhost
     login_user: test_user
     name: test_db
-    target: files/backup/test.tar
+    target: /tmp/db.tar
 
-- name: 'RESTORE : remove intermediate file'
+- name: 'RESTORE : restore images'
+  ansible.builtin.unarchive:
+    src: /tmp/images.tar
+    dest: /var/lib/docker/volumes/volume_koillection/_data/
+  become: true
+
+- name: 'RESTORE : remove intermediate files'
   ansible.builtin.file:
-    path: files/backup/test.tar
+    path: '{{ item }}'
     state: absent
+  loop:
+    - /tmp/db.tar
+    - /tmp/images.tar

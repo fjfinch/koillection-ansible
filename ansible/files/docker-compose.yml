@@ -13,6 +13,8 @@ services:
       - postgres
     volumes:
       - volume_koillection:/uploads
+    environment:
+      TZ: "${DEVICE_TIMEZONE}"
 
   postgres:
     container_name: postgres
@@ -22,9 +24,10 @@ services:
     env_file:
       - .env
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      TZ: "${DEVICE_TIMEZONE}"
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
     volumes:
       - volume_postgres:/var/lib/postgresql/data
 
