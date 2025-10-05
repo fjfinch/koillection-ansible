@@ -11,6 +11,7 @@
   community.general.archive:
     path: /var/lib/docker/volumes/volume_koillection/_data/
     dest: /tmp/images.tar
+    mode: "0644"
   become: true
 
 - name: 'DUMP : encrypt dumps'
@@ -18,8 +19,8 @@
     cmd: '{{ item }}'
     chdir: files/backup/
   loop:
-    - rm -f db.gpg && gpg --batch --passphrase '{{DB_BACKUP}}' -o db.gpg -c /tmp/db.tar
-    - rm -f images.gpg && gpg --batch --passphrase '{{ DB_BACKUP }}' -o images.gpg -c /tmp/images.tar
+    - rm -f db.gpg && gpg --batch --passphrase '{{ BACKUP_PW }}' -o db.gpg -c /tmp/db.tar
+    - rm -f images.gpg && gpg --batch --passphrase '{{ BACKUP_PW }}' -o images.gpg -c /tmp/images.tar
 
 - name: 'DUMP : remove intermediate files'
   ansible.builtin.file:
@@ -29,13 +30,3 @@
     - /tmp/db.tar
     - /tmp/images.tar
   become: true
-
-
-#localhost
-#test_user
-#test_db
-#/var/lib/docker/volumes/volume_koillection/_data/
-#/tmp/db.tar
-#/tmp/images.tar
-#db.gpg
-#images.gpg

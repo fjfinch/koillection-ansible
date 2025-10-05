@@ -18,5 +18,14 @@
   tasks:
     - include_vars: files/secret.yml
     - import_tasks: tasks/docker.yml
-    - import_tasks: tasks/dump.yml
+#    - import_tasks: tasks/dump.yml
 #    - import_tasks: tasks/restore.yml
+
+#localhost
+#test_user
+#test_db
+#/var/lib/docker/volumes/volume_koillection/_data/
+#/tmp/db.tar
+#/tmp/images.tar
+#files/backup/db.gpg
+#files/backup/images.gpg

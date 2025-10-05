@@ -26,6 +26,6 @@
   become: true
 
 - name: 'DOCKER : wait for everything to start'
-  wait_for:
+  ansible.builtin.wait_for:
     host: 127.0.0.1
     port: 80
